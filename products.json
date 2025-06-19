@@ -1,0 +1,258 @@
+[
+  {
+    "id": "1",
+    "name": "מלט פורטלנד 50 ק\"ג",
+    "description": "מלט איכותי לכל סוגי עבודות הבנייה, עומד בתקנים ישראליים.",
+    "longDescription": "מלט פורטלנד רב-שימושי המתאים ליציקת בטון, טיח, ריצוף, ועבודות בנייה כלליות. בעל עמידות גבוהה, כושר הדבקה מצוין וזמני התקשות אופטימליים. מומלץ לשימוש בפרויקטים הדורשים חוזק ועמידות לאורך זמן. ארוז בשק נייר חזק ובטוח של 50 ק\"ג.",
+    "price": 35.00,
+    "image": "https://placehold.co/400x300/2196F3/ffffff?text=Cement",
+    "category": "חומרי גלם",
+    "subCategory": "מלט וטיט",
+    "productType": "שקים",
+    "availability": true,
+    "sku": "MLT-P-50KG",
+    "dimensions": "50x30x10 ס\"מ",
+    "weight": "50 ק\"ג",
+    "features": [
+      "עמידות גבוהה",
+      "קל לעבודה",
+      "מתאים למגוון שימושים",
+      "תקן ישראלי"
+    ],
+    "relatedProducts": ["2", "3", "4"],
+    "aiTools": [
+      { "name": "מחשבון כמויות", "icon": "fas fa-calculator", "action": "openCalculator" },
+      { "name": "המלצות התקנה", "icon": "fas fa-info-circle", "action": "openInstallationGuide" }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "בלוק איטונג 20 ס\"מ",
+    "description": "בלוק איטונג קל משקל לבידוד תרמי ואקוסטי מעולה.",
+    "longDescription": "בלוק איטונג (בטון תאי מאוורר) בעובי 20 ס\"מ, אידיאלי לבניית קירות חוץ ופנים. מספק בידוד תרמי ואקוסטי מצוין, קל לחיתוך ולעיבוד. תורם לחיסכון באנרגיה וליצירת סביבת מגורים נעימה. מוצר ידידותי לסביבה ועמיד לאש.",
+    "price": 22.50,
+    "image": "https://placehold.co/400x300/BBDEFB/333333?text=Itong+Block",
+    "category": "קירות ומחיצות",
+    "subCategory": "בלוקים",
+    "productType": "איטונג",
+    "availability": true,
+    "sku": "BLK-ITG-20CM",
+    "dimensions": "60x20x20 ס\"מ",
+    "weight": "15 ק\"ג",
+    "features": [
+      "בידוד תרמי מעולה",
+      "בידוד אקוסטי",
+      "קל משקל",
+      "עמיד לאש"
+    ],
+    "relatedProducts": ["1", "3", "5"],
+    "aiTools": [
+      { "name": "מחשבון כמויות", "icon": "fas fa-calculator", "action": "openCalculator" },
+      { "name": "הדמיית קיר", "icon": "fas fa-fill-drip", "action": "openColorSimulator" }
+    ]
+  },
+  {
+    "id": "3",
+    "name": "צבע אקרילי לקירות פנים 10 ל'",
+    "description": "צבע איכותי על בסיס מים, בעל כיסוי גבוה וקל ליישום.",
+    "longDescription": "צבע אקרילי מט לקירות פנים, עשוי מחומרים איכותיים על בסיס מים. מספק גימור חלק ואחיד, בעל כושר כיסוי גבוה במיוחד וקל מאוד ליישום וניקוי. מתאים לחדרי מגורים, חדרי שינה ומשרדים. ידידותי לסביבה ובעל ריח עדין.",
+    "price": 120.00,
+    "image": "https://placehold.co/400x300/FFC107/333333?text=Paint",
+    "category": "צבעים וגמר",
+    "subCategory": "צבעי פנים",
+    "productType": "אקרילי",
+    "availability": true,
+    "sku": "PNT-ACR-10L",
+    "dimensions": "30x25x25 ס\"מ",
+    "weight": "12 ק\"ג",
+    "features": [
+      "כיסוי גבוה",
+      "קל לניקוי",
+      "ידידותי לסביבה",
+      "גימור מט"
+    ],
+    "relatedProducts": ["1", "5", "6"],
+    "aiTools": [
+      { "name": "הדמיית צבע", "icon": "fas fa-palette", "action": "openColorSimulator" },
+      { "name": "המלצות יישום", "icon": "fas fa-paint-roller", "action": "openInstallationGuide" },
+      { "name": "תצוגת AR", "icon": "fas fa-cube", "action": "openARView" }
+    ]
+  },
+  {
+    "id": "4",
+    "name": "אריחי קרמיקה 60x60 ס\"מ",
+    "description": "אריחי קרמיקה מעוצבים לריצוף פנים וחוץ, עמידים לשחיקה.",
+    "longDescription": "אריחי קרמיקה פורצלן בגודל 60x60 ס\"מ, בעלי גימור מט יוקרתי. מתאימים לריצוף חללי פנים כמו סלונים, מטבחים וחדרי אמבטיה, וכן למרפסות וחללי חוץ מקורים. עמידים בפני שחיקה, כתמים ומים. קלים לתחזוקה ובעלי מראה מודרני ונקי. נמכרים במארזים של 4 יחידות (1.44 מ\"ר).",
+    "price": 85.00,
+    "image": "https://placehold.co/400x300/8BC34A/ffffff?text=Tiles",
+    "category": "ריצוף וחיפוי",
+    "subCategory": "אריחי קרמיקה",
+    "productType": "פורצלן",
+    "availability": true,
+    "sku": "TILE-CER-60X60",
+    "dimensions": "60x60x1 ס\"מ (ליחידה)",
+    "weight": "25 ק\"ג (למארז)",
+    "features": [
+      "עמיד לשחיקה",
+      "קל לניקוי",
+      "מתאים לפנים וחוץ",
+      "גימור מט"
+    ],
+    "relatedProducts": ["1", "5"],
+    "aiTools": [
+      { "name": "מחשבון שטחים", "icon": "fas fa-ruler-combined", "action": "openCalculator" },
+      { "name": "הדמיית חלל", "icon": "fas fa-vector-square", "action": "openColorSimulator" }
+    ]
+  },
+  {
+    "id": "5",
+    "name": "דלת כניסה מעוצבת",
+    "description": "דלת כניסה יוקרתית מפלדה, עמידה במיוחד ובגימור עץ.",
+    "longDescription": "דלת כניסה חזקה במיוחד, עשויה מפלדה מגולוונת בחיפוי דמוי עץ טבעי. מספקת ביטחון מקסימלי לבית, עם מנגנון נעילה רב בריחי וציר נסתר. הדלת כוללת מנעול צילינדר מתקדם וידיות מעוצבות. בידוד תרמי ואקוסטי גבוה. זמינה במגוון גדלים וגימורים בהתאמה אישית.",
+    "price": 2500.00,
+    "image": "https://placehold.co/400x300/9E9E9E/ffffff?text=Door",
+    "category": "פתרונות כניסה",
+    "subCategory": "דלתות כניסה",
+    "productType": "פלדה",
+    "availability": true,
+    "sku": "DR-ENT-DESIGN",
+    "dimensions": "207x90 ס\"מ (סטנדרט)",
+    "weight": "80 ק\"ג",
+    "features": [
+      "ביטחון גבוה",
+      "בידוד אקוסטי",
+      "עמידות גבוהה",
+      "עיצוב מודרני"
+    ],
+    "relatedProducts": ["2", "3", "4"],
+    "aiTools": [
+      { "name": "הדמיית מיקום", "icon": "fas fa-map-marked-alt", "action": "openARView" },
+      { "name": "התאמה לבית", "icon": "fas fa-home", "action": "openColorSimulator" }
+    ]
+  },
+  {
+    "id": "6",
+    "name": "איטום אקרילי לגגות 20 ל'",
+    "description": "חומר איטום אקרילי גמיש ויעיל לגגות, עמיד למים וקרינת UV.",
+    "longDescription": "חומר איטום אקרילי לבן על בסיס מים, בעל גמישות גבוהה ויכולת גישור על סדקים. מיועד לאיטום גגות, מרפסות, קירות חיצוניים ועוד. מספק שכבת הגנה עמידה בפני מים עומדים, קרינת UV ותנאי מזג אוויר קיצוניים. קל ליישום באמצעות רולר או מברשת, ואינו דורש פריימר ברוב המקרים. מגיע בפח של 20 ליטר.",
+    "price": 380.00,
+    "image": "https://placehold.co/400x300/607D8B/ffffff?text=RoofSealant",
+    "category": "חומרי גלם",
+    "subCategory": "איטום",
+    "productType": "אקרילי",
+    "availability": true,
+    "sku": "SEAL-ACR-20L",
+    "dimensions": "40x30x30 ס\"מ",
+    "weight": "25 ק\"ג",
+    "features": [
+      "עמיד למים",
+      "גמיש",
+      "עמיד UV",
+      "קל ליישום"
+    ],
+    "relatedProducts": ["1"],
+    "aiTools": [
+      { "name": "מחשבון שטח", "icon": "fas fa-calculator", "action": "openCalculator" }
+    ]
+  },
+  {
+    "id": "7",
+    "name": "ברז מטבח נשלף",
+    "description": "ברז מטבח מודרני עם פיה נשלפת, גימור ניקל מוברש.",
+    "longDescription": "ברז מטבח יוקרתי מנירוסטה בגימור ניקל מוברש, עם פיה נשלפת המאפשרת גמישות ונוחות מירבית בשימוש. מתאים לכיורים בעלי חור יחיד. בעל מנגנון הפעלה קל ונוח לשליטה בטמפרטורה ובעוצמת הזרם. עיצוב מודרני ואלגנטי שמשתלב בכל מטבח.",
+    "price": 550.00,
+    "image": "https://placehold.co/400x300/4CAF50/ffffff?text=KitchenFaucet",
+    "category": "אינסטלציה",
+    "subCategory": "ברזים",
+    "productType": "מטבח",
+    "availability": true,
+    "sku": "FAUCET-KITCH-PULL",
+    "dimensions": "גובה: 35 ס\"מ",
+    "weight": "1.5 ק\"ג",
+    "features": [
+      "פיה נשלפת",
+      "גימור ניקל מוברש",
+      "עיצוב מודרני",
+      "קל לשימוש"
+    ],
+    "relatedProducts": [],
+    "aiTools": [
+      { "name": "הדמיית התקנה", "icon": "fas fa-wrench", "action": "openInstallationGuide" }
+    ]
+  },
+  {
+    "id": "8",
+    "name": "שואב אבק תעשייתי",
+    "description": "שואב אבק עוצמתי לשאיבת לכלוך רטוב ויבש באתרי בנייה.",
+    "longDescription": "שואב אבק תעשייתי חזק במיוחד, המיועד לעבודות ניקיון כבדות באתרי בנייה, סדנאות ומפעלים. בעל יכולת שאיבת נוזלים ואבק יבש כאחד. מצויד במיכל איסוף גדול, פילטרים הניתנים לניקוי קל, ומנוע חזק המבטיח ביצועים אופטימליים. גלגלים יציבים מאפשרים ניידות נוחה.",
+    "price": 980.00,
+    "image": "https://placehold.co/400x300/FF9800/ffffff?text=Vacuum",
+    "category": "כלים וציוד",
+    "subCategory": "כלי ניקיון",
+    "productType": "שואבי אבק",
+    "availability": true,
+    "sku": "VAC-IND-HEAVY",
+    "dimensions": "גובה: 70 ס\"מ, קוטר: 40 ס\"מ",
+    "weight": "18 ק\"ג",
+    "features": [
+      "שאיבת רטוב/יבש",
+      "מנוע עוצמתי",
+      "מיכל גדול",
+      "ניידות קלה"
+    ],
+    "relatedProducts": [],
+    "aiTools": [
+      { "name": "מדריך שימוש", "icon": "fas fa-book-open", "action": "openInstallationGuide" }
+    ]
+  },
+  {
+    "id": "9",
+    "name": "כבל חשמל תלת פאזי 50 מ'",
+    "description": "כבל חשמל עמיד במיוחד, מתאים לשימוש תעשייתי וכבד.",
+    "longDescription": "כבל חשמל תלת פאזי תקני, בעובי 50 מטר, מיועד לשימוש תעשייתי, אתרי בנייה, ומערכות חשמל הדורשות העברת זרם גבוה. הכבל עשוי מחומרים איכותיים המבטיחים עמידות בפני שחיקה, קריעה וחשיפה לתנאי סביבה קשים. מתאים לשימוש עם מכונות כבדות, לוחות חשמל תעשייתיים ועוד. בעל בידוד כפול לבטיחות מירבית.",
+    "price": 420.00,
+    "image": "https://placehold.co/400x300/795548/ffffff?text=Cable",
+    "category": "חשמל ותאורה",
+    "subCategory": "כבלים",
+    "productType": "תלת פאזי",
+    "availability": true,
+    "sku": "CBL-ELC-3PH-50M",
+    "dimensions": "אורך: 50 מטר",
+    "weight": "8 ק\"ג",
+    "features": [
+      "עמידות גבוהה",
+      "מתאים לתעשייה",
+      "בידוד כפול",
+      "זרם גבוה"
+    ],
+    "relatedProducts": [],
+    "aiTools": [
+      { "name": "מחשבון הספק", "icon": "fas fa-bolt", "action": "openCalculator" }
+    ]
+  },
+  {
+    "id": "10",
+    "name": "מקדחה רוטטת מקצועית",
+    "description": "מקדחה חשמלית חזקה עם מצב רוטט לקידוח בבטון וקירות.",
+    "longDescription": "מקדחה רוטטת מקצועית מבית מותג מוביל, אידיאלית לקידוחים מדויקים וחזקים בבטון, אבן, עץ ומתכת. מצוידת במנוע עוצמתי, בורר מהירויות, ומצב רוטט לביצועים מרביים בחומרים קשים. ידית אחיזה ארגונומית וקלה לשימוש. מגיעה עם סט מקדחים בסיסי ומזוודת נשיאה קשיחה.",
+    "price": 320.00,
+    "image": "https://placehold.co/400x300/673AB7/ffffff?text=Drill",
+    "category": "כלים וציוד",
+    "subCategory": "כלי עבודה חשמליים",
+    "productType": "מקדחות",
+    "availability": true,
+    "sku": "DRL-PRO-ROT",
+    "dimensions": "30x25x10 ס\"מ",
+    "weight": "3 ק\"ג",
+    "features": [
+      "מצב רוטט",
+      "מנוע עוצמתי",
+      "בורר מהירויות",
+      "אחיזה נוחה"
+    ],
+    "relatedProducts": ["9"],
+    "aiTools": [
+      { "name": "מדריך שימוש", "icon": "fas fa-book", "action": "openInstallationGuide" }
+    ]
+  }
+]
