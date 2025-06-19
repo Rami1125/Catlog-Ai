@@ -1,0 +1,68 @@
+/* style.css */
+
+/* Custom fonts imported in index.html */
+body {
+    font-family: 'Assistant', sans-serif;
+    direction: rtl; /* Ensure right-to-left for Hebrew */
+    text-align: right; /* Default text alignment for RTL */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    text-align: right; /* Ensure headings align right in RTL */
+}
+
+/* Specific adjustments for RTL where needed */
+.flex-row {
+    flex-direction: row-reverse; /* Reverse flex direction for RTL layouts if necessary */
+}
+
+/* Adjustments for icons in RTL */
+.ai-tool-button i {
+    margin-right: 0; /* Remove default margin-right if any */
+    margin-left: 0.5rem; /* Add margin-left for spacing after icon in RTL */
+}
+
+/* You can add more custom CSS here if Tailwind doesn't cover all your needs */
+/* For example, if you want specific hover effects not easily done with Tailwind classes */
+/* Or custom animations */
+
+/* Example: Basic custom scrollbar for better aesthetics (optional) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Ensure images fit nicely within their containers */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block; /* Removes extra space below images */
+}
+
+/* Specific styles for line-clamp if you need more control than Tailwind */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Override default browser focus outlines with a more styled one */
+*:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.4); /* Primary color with transparency */
+}
