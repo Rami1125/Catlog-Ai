@@ -986,7 +986,7 @@
             
             <!-- Scrollable content area within the modal -->
             <div class="modal-content-scrollable">
-                <img src="" alt="מוצר" class="w-full h-48 object-cover rounded mb-4 modal-image"/>
+                <img src="" alt="מוצר" class="w-full h-48 object-cover rounded mb-4 modal-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E3F2FD/2196F3?text=תמונה+חסרה'; console.error('Failed to load image in modal: ' + this.src);"/>
                 <h2 class="text-xl font-bold mb-2 modal-title"></h2>
                 <p class="text-gray-600 text-sm mb-2 modal-description"></p>
                 <span class="text-primary font-bold text-lg modal-price"></span>
@@ -1018,7 +1018,7 @@
                         <i class="ri-tools-fill ri-lg ml-2"></i> מדריך התקנה
                     </button>
                     <!-- NEW button for 3D/AR - Placeholder -->
-                    <button onclick="alert('תכונה זו בפיתוח! בקרוב תוכלו לצפות במוצר בתלת-ממד או במציאות רבודה.')" class="bg-gray-700 text-white px-4 py-2 rounded-button hover:bg-gray-800 transition shine-button text-sm product-modal-ai-button">
+                    <button onclick="console.warn('תכונה זו בפיתוח! בקרוב תוכלו לצפות במוצר בתלת-ממד או במציאות רבודה.')" class="bg-gray-700 text-white px-4 py-2 rounded-button hover:bg-gray-800 transition shine-button text-sm product-modal-ai-button">
                         <i class="ri-cube-fill ri-lg ml-2"></i> צפה בתלת-ממד/AR
                     </button>
                 </div>
@@ -1419,7 +1419,7 @@
                 <span class="mr-2 text-gray-600 text-sm">העוזר חושב...</span>
             </div>
             <div id="chatbot-error" class="hidden text-red-600 text-center text-sm mt-2">
-                אירעה שגיאה. אנא נסה שוב.
+                אירעה שגיאה.
             </div>
         </div>
     </div>
@@ -1598,7 +1598,7 @@
                 <div onclick="openModal('${encodeURIComponent(prod.title)}', '${encodeURIComponent(prod.description)}', '${encodeURIComponent(prod.image)}', '${encodeURIComponent(prod["price "] || prod.price || "—")}', '${encodeURIComponent(JSON.stringify(prod))}')"
                     class="glass-card product-card cursor-pointer rounded-lg overflow-hidden shadow-md transition hover:shadow-xl bg-white">
                     <div class="image-transition h-56 relative">
-                        <img src="${prod.image}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E3F2FD/2196F3?text=תמונה+חסרה'; console.error('Failed to load image: ${prod.image}');" alt="${prod.title}" class="w-full h-full object-cover object-top">
+                        <img src="${prod.image}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E3F2FD/2196F3?text=תמונה+חסרה'; console.error('Failed to load image: ' + this.src);" alt="${prod.title}" class="w-full h-full object-cover object-top">
                         <div class="absolute inset-0 bg-black/10 opacity-0 hover:opacity-100 transition duration-300"></div>
                     </div>
                     <div class="p-4">
@@ -1750,12 +1750,14 @@
             document.getElementById('product-qa-section').classList.add('hidden');
             document.getElementById('product-qa-input').value = '';
             document.getElementById('product-qa-response').innerHTML = '<p>התשובה לשאלתך תופיע כאן...</p>'; // Reset content
+            document.getElementById('product-qa-response').classList.remove('flex-col');
             document.getElementById('product-qa-loading').classList.add('hidden');
             document.getElementById('product-qa-error').classList.add('hidden');
 
             document.getElementById('description-generator-section').classList.add('hidden');
             document.getElementById('description-generator-input').value = '';
             document.getElementById('description-generator-response').innerHTML = '<p>התיאור המשופר יופיע כאן...</p>'; // Reset content
+            document.getElementById('description-generator-response').classList.remove('flex-col');
             document.getElementById('description-generator-loading').classList.add('hidden');
             document.getElementById('description-generator-error').classList.add('hidden');
 
@@ -1976,7 +1978,7 @@
 
             heroContainer.innerHTML = heroCategories.map(cat => `
                 <div class="hero-image-item glass-card">
-                    <img src="${cat.imageUrl}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E3F2FD/2196F3?text=תמונה+חסרה'; console.error('Failed to load image: ${cat.imageUrl}');" alt="${cat.name}">
+                    <img src="${cat.imageUrl}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/E3F2FD/2196F3?text=תמונה+חסרה'; console.error('Failed to load hero image: ' + this.src);" alt="${cat.name}">
                     <div class="hero-image-overlay">
                         <a href="${cat.linkUrl}" class="bg-primary text-white px-4 py-2 rounded-button shine-button">לדף המוצר</a>
                     </div>
@@ -2583,11 +2585,11 @@
             // Display product images
             comparisonImagesContainer.innerHTML = `
                 <div class="flex flex-col items-center">
-                    <img src="${product1.image}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E3F2FD/2196F3?text=תמונה'; console.error('Failed to load image: ${product1.image}');" alt="${product1.title}" class="comparison-product-image">
+                    <img src="${product1.image}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E3F2FD/2196F3?text=תמונה'; console.error('Failed to load comparison image: ' + this.src);" alt="${product1.title}" class="comparison-product-image">
                     <span class="text-sm font-semibold">${product1.title}</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <img src="${product2.image}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E3F2FD/2196F3?text=תמונה'; console.error('Failed to load image: ${product2.image}');" alt="${product2.title}" class="comparison-product-image">
+                    <img src="${product2.image}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/E3F2FD/2196F3?text=תמונה'; console.error('Failed to load comparison image: ' + this.src);" alt="${product2.title}" class="comparison-product-image">
                     <span class="text-sm font-semibold">${product2.title}</span>
                 </div>
             `;
@@ -2883,7 +2885,7 @@
             printWindow.document.write(`<img src="${SABAN_LOGO_URL}" alt="לוגו ח.סבן" class="logo">`);
             printWindow.document.write(`<h1>${titlePrefix} עבור ${entityName}</h1>`);
             if (imageUrl && imageUrl !== 'null') { // Check for null string as well
-                printWindow.document.write(`<img src="${imageUrl}" onerror="this.onerror=null;this.src='https://placehold.co/200x150/E3F2FD/2196F3?text=תמונה+חסרה';" alt="${entityName}" class="product-image">`);
+                printWindow.document.write(`<img src="${imageUrl}" onerror="this.onerror=null;this.src='https://placehold.co/200x150/E3F2FD/2196F3?text=תמונה+חסרה'; console.error('Failed to load image for print: ' + this.src);" alt="${entityName}" class="product-image">`);
             }
             printWindow.document.write('<div class="content">');
             printWindow.document.write(aiContentHtml); // This now includes the warning for order assistant
