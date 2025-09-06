@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>מערכת ניהול מכולות</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5faff;
+      margin: 0;
+      padding: 20px;
+      color: #003366;
+    }
+    h1 {
+      text-align: center;
+      color: #004a99;
+      margin-bottom: 20px;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .stat-box {
+      background: #ffffff;
+      border: 1px solid #d0e6ff;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      flex: 1;
+      margin: 0 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .stat-box h2 {
+      margin: 0;
+      font-size: 18px;
+      color: #0066cc;
+    }
+    .stat-box p {
+      font-size: 24px;
+      margin: 10px 0 0;
+      font-weight: bold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border: 1px solid #d0e6ff;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #e6f0ff;
+      color: #003366;
+    }
+    tr:nth-child(even) {
+      background: #f9fcff;
+    }
+  </style>
+  <script>
+    function loadData() {
+      google.script.run.withSuccessHandler(displayData).getDataFromSheet();
+    }
+
+    function displayData(data) {
+      if (!data || data.length === 0) return;
+
+      let table = "<table><tr>";
+      data[0].forEach(header => {
+        table += `<th>${header}</th>`;
+      });
+      table += "</tr>";
+
+      let totalDays = 0, count = 0, onTime = 0, late = 0;
+
+      for (let i = 1; i < data.length; i++) {
+        table += "<tr>";
+        data[i].forEach(cell => {
+          table += `<td>${cell}</td>`;
+        });
+        table += "</tr>";
+
+        let days = parseInt(data[i][3]); // נניח שעמודת "ימי שכירות" היא בעמודה 4
+        if (!isNaN(days)) {
+          totalDays += days;
+          count++;
+          if (days <= 10) onTime++; else late++;
+        }
+      }
+
+      table += "</table>";
+      document.getElementById("table").innerHTML = table;
+
+      document.getElementById("avgDays").innerText = (count ? (totalDays / count).toFixed(1) : 0);
+      document.getElementById("onTime").innerText = onTime;
+      document.getElementById("late").innerText = late;
+      document.getElementById("avgLate").innerText = (count ? (late / count * 100).toFixed(1) + "%" : "0%");
+    }
+  </script>
+</head>
+<body onload="loadData()">
+  <h1>מערכת ניהול מכולות</h1>
+
+  <div class="stats">
+    <div class="stat-box">
+      <h2>ממוצע ימי שכירות</h2>
+      <p id="avgDays">0</p>
+    </div>
+    <div class="stat-box">
+      <h2>לקוחות בזמן</h2>
+      <p id="onTime">0</p>
+    </div>
+    <div class="stat-box">
+      <h2>לקוחות חורגים</h2>
+      <p id="late">0</p>
+    </div>
+    <div class="stat-box">
+      <h2>אחוז חורגים</h2>
+      <p id="avgLate">0%</p>
+    </div>
+  </div>
+
+  <div id="table"></div>
+</body>
+</html>
