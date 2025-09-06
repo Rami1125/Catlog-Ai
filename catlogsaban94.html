@@ -73,67 +73,6 @@
         .hero-image-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 1rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .hero-image-item:hover .hero-image-overlay { opacity: 1; }
-        input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; 
-            margin: 0; 
-        }
-        .modal-content-scrollable {
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-        .autocomplete-suggestions {
-            position: absolute;
-            background-color: white;
-            border: 1px solid #ddd;
-            max-height: 150px;
-            overflow-y: auto;
-            z-index: 10;
-            width: 100%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            border-radius: 0 0 8px 8px;
-            margin-top: -1px;
-        }
-        .autocomplete-suggestions div {
-            padding: 8px 12px;
-            cursor: pointer;
-            border-bottom: 1px solid #eee;
-        }
-        .autocomplete-suggestions div:hover {
-            background-color: #f0f8ff;
-            color: #2196F3;
-        }
-        .autocomplete-suggestions div:last-child {
-            border-bottom: none;
-        }
-        /* New carousel styles */
-        .carousel-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            margin-bottom: 2rem;
-        }
-        .carousel-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-        .carousel-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
             padding: 1rem;
             color: white;
@@ -449,24 +388,34 @@
         const itemsPerPage = 12;
         let currentPage = 1;
 
-        // Data for calculation formulas (simplified for demonstration)
+        // Data for calculation formulas
+        // מילון מורחב עם מחשבונים למוצרים שונים
         const calculationFormulas = {
             'מלט  25 ק״ג': {
-                'area': { formula: 'area / 0.5', unit: 'מ"ר' }, // Example: 1 bag covers 0.5 sqm
-                'weight': { formula: 'weight / 25', unit: 'ק"ג' },
-                'quantity': { formula: 'quantity', unit: 'יחידות' }
+                'area': { formula: (area) => Math.ceil(area / 0.5), unit: 'מ"ר' }, // שק אחד מכסה 0.5 מ"ר
+                'weight': { formula: (weight) => Math.ceil(weight / 25), unit: 'ק"ג' },
+                'quantity': { formula: (quantity) => Math.ceil(quantity), unit: 'יחידות' }
             },
             'בלוק איטונג': {
-                'area': { formula: 'area * 8', unit: 'מ"ר' }, // Example: 8 units per sqm
-                'weight': { formula: 'weight / 15', unit: 'ק"ג' }, // Example: 1 unit weighs 15kg
-                'quantity': { formula: 'quantity', unit: 'יחידות' }
+                'area': { formula: (area) => Math.ceil(area * 10.5 * 1.05), unit: 'מ"ר' }, // כ-10.5 בלוקים למ"ר + 5% פחת
+                'weight': { formula: (weight) => Math.ceil(weight / 15), unit: 'ק"ג' }, // בלוק ממוצע 15 ק"ג
+                'quantity': { formula: (quantity) => Math.ceil(quantity), unit: 'יחידות' }
+            },
+            'גבס': {
+                'area': { formula: (area) => Math.ceil(area / (1.2 * 2.4) * 1.07), unit: 'מ"ר' }, // לוח גבס 1.2x2.4 + 7% פחת
+                'weight': null,
+                'quantity': { formula: (quantity) => Math.ceil(quantity), unit: 'יחידות' }
+            },
+            'סומסום בלה חצי קוב': {
+                'area': { formula: (width, length, thickness) => Math.ceil((width * length * thickness) / 0.5), unit: 'מ"ק' }, // נפח חומר חלקי נפח בלה
+                'weight': null,
+                'quantity': { formula: (quantity) => Math.ceil(quantity), unit: 'יחידות' }
             },
             'אבני מדרך': {
-                'area': { formula: 'area * 2', unit: 'מ"ר' }, // Example: 2 units per sqm
-                'weight': { formula: 'weight / 30', unit: 'ק"ג' }, // Example: 1 unit weighs 30kg
-                'quantity': { formula: 'quantity', unit: 'יחידות' }
+                'area': { formula: (area) => Math.ceil(area * 2), unit: 'מ"ר' }, // 2 יחידות למ"ר
+                'weight': { formula: (weight) => Math.ceil(weight / 30), unit: 'ק"ג' }, // יחידה שוקלת 30 ק"ג
+                'quantity': { formula: (quantity) => Math.ceil(quantity), unit: 'יחידות' }
             },
-            // Add more products and their formulas here based on your CSV data
         };
 
         // Carousel Data
@@ -759,18 +708,44 @@
             const inputContainer = document.getElementById('input-container');
             const calculationType = document.getElementById('calculation-type').value;
             inputContainer.innerHTML = ''; // Clear previous inputs
+            
+            const productTitle = currentProductForModal?.title;
+            const productFormulas = calculationFormulas[productTitle];
+
+            if (!productFormulas || !productFormulas[calculationType]) {
+                inputContainer.innerHTML = `<p class="text-red-500 text-center">מחשבון לא זמין עבור סוג חישוב זה.</p>`;
+                return;
+            }
 
             if (calculationType === 'area') {
-                inputContainer.innerHTML = `
-                    <div>
-                        <label for="area-input-width" class="block text-gray-700 text-sm font-bold mb-2">הזן רוחב ($מ$):</label>
-                        <input type="number" id="area-input-width" placeholder="רוחב" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                    <div>
-                        <label for="area-input-height" class="block text-gray-700 text-sm font-bold mb-2">הזן גובה ($מ$):</label>
-                        <input type="number" id="area-input-height" placeholder="גובה" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
-                    </div>
-                `;
+                 // Check for specific products that need multiple area inputs
+                if (productTitle === 'סומסום בלה חצי קוב') {
+                     inputContainer.innerHTML = `
+                        <div>
+                            <label for="area-input-width" class="block text-gray-700 text-sm font-bold mb-2">הזן רוחב ($מ$):</label>
+                            <input type="number" id="area-input-width" placeholder="רוחב" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label for="area-input-length" class="block text-gray-700 text-sm font-bold mb-2">הזן אורך ($מ$):</label>
+                            <input type="number" id="area-input-length" placeholder="אורך" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label for="area-input-thickness" class="block text-gray-700 text-sm font-bold mb-2">הזן עובי כיסוי ($מ$):</label>
+                            <input type="number" id="area-input-thickness" placeholder="עובי" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                    `;
+                } else {
+                     inputContainer.innerHTML = `
+                        <div>
+                            <label for="area-input-width" class="block text-gray-700 text-sm font-bold mb-2">הזן רוחב ($מ$):</label>
+                            <input type="number" id="area-input-width" placeholder="רוחב" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label for="area-input-height" class="block text-gray-700 text-sm font-bold mb-2">הזן גובה ($מ$):</label>
+                            <input type="number" id="area-input-height" placeholder="גובה" class="w-full px-4 py-2 rounded-md border glass-effect focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                    `;
+                }
             } else if (calculationType === 'weight') {
                 inputContainer.innerHTML = `
                     <div>
@@ -791,24 +766,35 @@
         function calculateQuantity() {
             const calculationType = document.getElementById('calculation-type').value;
             const product = currentProductForModal;
-            const formulaData = calculationFormulas[product.title] || { 'quantity': { formula: 'quantity', unit: 'יחידות' } }; // Fallback
+
+            // Get formula and check if it exists
+            const formulaData = calculationFormulas[product.title]?.[calculationType];
+            if (!formulaData) {
+                document.getElementById('final-quantity').innerText = "לא זמין";
+                document.getElementById('calculation-result').classList.remove('hidden');
+                return;
+            }
 
             let result = 0;
-            let finalUnit = '';
+            const formulaFunc = formulaData.formula;
 
             if (calculationType === 'area') {
                 const width = parseFloat(document.getElementById('area-input-width').value) || 0;
-                const height = parseFloat(document.getElementById('area-input-height').value) || 0;
-                const area = width * height;
-                result = eval(formulaData.area.formula.replace('area', area));
-                finalUnit = 'יחידות';
+                if (product.title === 'סומסום בלה חצי קוב') {
+                     const length = parseFloat(document.getElementById('area-input-length').value) || 0;
+                     const thickness = parseFloat(document.getElementById('area-input-thickness').value) || 0;
+                     result = formulaFunc(width, length, thickness);
+                } else {
+                    const height = parseFloat(document.getElementById('area-input-height').value) || 0;
+                    const area = width * height;
+                    result = formulaFunc(area);
+                }
             } else if (calculationType === 'weight') {
                 const weight = parseFloat(document.getElementById('weight-input').value) || 0;
-                result = eval(formulaData.weight.formula.replace('weight', weight));
-                finalUnit = 'יחידות';
+                result = formulaFunc(weight);
             } else { // 'quantity'
-                result = parseFloat(document.getElementById('quantity-input').value) || 0;
-                finalUnit = 'יחידות';
+                const quantity = parseFloat(document.getElementById('quantity-input').value) || 0;
+                result = formulaFunc(quantity);
             }
             
             // Round up to the nearest whole number for physical products
