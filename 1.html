@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>דשבורד מכולות - תובנות ותוכנית קדימה</title>
+  <title>דשבורד מחסנים - דוח ותחזית</title>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <style>
     body {
@@ -12,158 +12,138 @@
       padding: 20px;
       color: #003366;
     }
-    h1 {
+    h1, h2 {
       text-align: center;
       color: #004a99;
     }
-    .stats {
-      display: flex;
-      justify-content: space-around;
-      margin: 20px 0;
-    }
-    .stat-box {
+    .warehouse {
       background: #ffffff;
       border: 1px solid #d0e6ff;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 20px;
+      margin: 30px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    table th, table td {
+      border: 1px solid #d0e6ff;
+      padding: 10px;
       text-align: center;
-      flex: 1;
-      margin: 0 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    #charts {
-      margin-top: 40px;
+    table th {
+      background: #e6f0ff;
     }
-    .chart-box {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    .chart {
+      height: 300px;
+    }
+    .summary {
+      background: #fff8cc;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      color: #333;
     }
   </style>
   <script>
     google.charts.load("current", {packages:["corechart", "line"]});
+    google.charts.setOnLoadCallback(drawAllCharts);
 
-    function loadData() {
-      google.script.run.withSuccessHandler(processData).getDataFromSheet();
+    function drawAllCharts() {
+      drawWarehouse("chart30", "מחסן 30 (שארק)", 102, 132, 113);
+      drawWarehouse("chart32", "מחסן 32 (כראדי)", 11, 11, 10);
+      drawWarehouse("chart40", "מחסן 40 (שי שרון)", 18, 0, 0);
     }
 
-    function processData(data) {
-      if (!data || data.length === 0) return;
+    function drawWarehouse(containerId, title, placements, swaps, removals) {
+      let data = google.visualization.arrayToDataTable([
+        ['פעולה', 'כמות'],
+        ['הצבות', placements],
+        ['החלפות', swaps],
+        ['הוצאות', removals]
+      ]);
 
-      let totalDays = 0, count = 0, onTime = 0, late = 0;
-      let monthlyData = {}; // {חודש: [ימי שכירות ממוצעים]}
-      
-      for (let i = 1; i < data.length; i++) {
-        let row = data[i];
-        let date = new Date(row[1]); // נניח עמודה 2 = תאריך
-        let days = parseInt(row[3]); // נניח עמודה 4 = ימי שכירות
-        if (!isNaN(days)) {
-          totalDays += days;
-          count++;
-          if (days <= 10) onTime++; else late++;
-
-          let month = date.getMonth() + 1;
-          if (!monthlyData[month]) monthlyData[month] = [];
-          monthlyData[month].push(days);
-        }
-      }
-
-      let avgDays = (count ? (totalDays / count).toFixed(1) : 0);
-      let avgLate = (count ? (late / count * 100).toFixed(1) : 0);
-
-      document.getElementById("avgDays").innerText = avgDays;
-      document.getElementById("onTime").innerText = onTime;
-      document.getElementById("late").innerText = late;
-      document.getElementById("avgLate").innerText = avgLate + "%";
-
-      drawCharts(monthlyData, avgDays);
-    }
-
-    function drawCharts(monthlyData, avgDays) {
-      // תרשים 1: עמודות ממוצע ימי שכירות לפי חודש
-      let chartData = [["חודש", "ממוצע ימי שכירות"]];
-      for (let m = 1; m <= 12; m++) {
-        if (monthlyData[m]) {
-          let sum = monthlyData[m].reduce((a,b)=>a+b,0);
-          let avg = sum / monthlyData[m].length;
-          chartData.push([`חודש ${m}`, avg]);
-        } else {
-          chartData.push([`חודש ${m}`, null]);
-        }
-      }
-
-      let data1 = google.visualization.arrayToDataTable(chartData);
-      let options1 = {
-        title: "ממוצע ימי שכירות חודשי",
-        colors: ["#3399ff"],
-        hAxis: { title: "חודשים" },
-        vAxis: { title: "ימים" },
-        legend: "none"
+      let options = {
+        title: title + " - חלוקת פעולות",
+        colors: ['#3399ff','#66ccff','#003366'],
+        legend: { position: 'bottom' }
       };
-      new google.visualization.ColumnChart(document.getElementById("chart1")).draw(data1, options1);
 
-      // תרשים 2: תחזית עד דצמבר (קו מגמה עם חץ)
-      let forecastData = [["חודש", "צפי ימי שכירות"]];
-      let trend = avgDays > 10 ? -0.5 : 0.5; // אם חורגים יורד, אם עומדים בזמן עולה
-      let val = parseFloat(avgDays);
+      new google.visualization.PieChart(document.getElementById(containerId)).draw(data, options);
+
+      // תחזית קדימה עד דצמבר
+      let forecastData = [["חודש", "צפי פעולות"]];
+      let total = placements + swaps + removals;
+      let trend = total > 50 ? 5 : 1; // מחסנים גדולים מקבלים קצב גידול מהיר יותר
+      let value = total;
       for (let m = new Date().getMonth() + 1; m <= 12; m++) {
-        forecastData.push([`חודש ${m}`, val]);
-        val += trend;
+        forecastData.push([`חודש ${m}`, value]);
+        value += trend;
       }
 
-      let data2 = google.visualization.arrayToDataTable(forecastData);
-      let options2 = {
-        title: "תחזית שיפור עד דצמבר",
+      let dataForecast = google.visualization.arrayToDataTable(forecastData);
+      let optionsForecast = {
+        title: title + " - תחזית עד דצמבר",
         colors: ["#0066cc"],
         curveType: "function",
         legend: "none",
         hAxis: { title: "חודשים" },
-        vAxis: { title: "ימי שכירות צפויים" }
+        vAxis: { title: "סה״כ פעולות" }
       };
-      new google.visualization.LineChart(document.getElementById("chart2")).draw(data2, options2);
-
-      // תרשים 3: אחוז חורגים מול בזמן
-      let data3 = google.visualization.arrayToDataTable([
-        ["קטגוריה", "כמות"],
-        ["בזמן", parseInt(document.getElementById("onTime").innerText)],
-        ["חורגים", parseInt(document.getElementById("late").innerText)]
-      ]);
-      let options3 = {
-        title: "התפלגות לקוחות",
-        colors: ["#33ccff", "#ff6666"]
-      };
-      new google.visualization.PieChart(document.getElementById("chart3")).draw(data3, options3);
+      new google.visualization.LineChart(document.getElementById(containerId + "_forecast")).draw(dataForecast, optionsForecast);
     }
   </script>
 </head>
-<body onload="loadData()">
-  <h1>דשבורד ניהול מכולות</h1>
+<body>
+  <h1>דשבורד פעילות מחסנים</h1>
 
-  <div class="stats">
-    <div class="stat-box">
-      <h2>ממוצע ימי שכירות</h2>
-      <p id="avgDays">0</p>
-    </div>
-    <div class="stat-box">
-      <h2>לקוחות בזמן</h2>
-      <p id="onTime">0</p>
-    </div>
-    <div class="stat-box">
-      <h2>לקוחות חורגים</h2>
-      <p id="late">0</p>
-    </div>
-    <div class="stat-box">
-      <h2>אחוז חורגים</h2>
-      <p id="avgLate">0%</p>
-    </div>
+  <!-- מחסן 30 -->
+  <div class="warehouse">
+    <h2>מחסן 30 - שארק</h2>
+    <table>
+      <tr><th>פעולה</th><th>כמות</th></tr>
+      <tr><td>הצבות</td><td>102</td></tr>
+      <tr><td>החלפות</td><td>132</td></tr>
+      <tr><td>הוצאות</td><td>113</td></tr>
+      <tr><th>סה״כ</th><th>347</th></tr>
+    </table>
+    <div id="chart30" class="chart"></div>
+    <div id="chart30_forecast" class="chart"></div>
+    <div class="summary">שארק פעיל מאוד באזור המרכז והשרון. נדרש לאזן בין הצבות להחלפות כדי לשמור על זמינות צי.</div>
   </div>
 
-  <div id="charts">
-    <div class="chart-box"><div id="chart1" style="height: 400px;"></div></div>
-    <div class="chart-box"><div id="chart2" style="height: 400px;"></div></div>
-    <div class="chart-box"><div id="chart3" style="height: 400px;"></div></div>
+  <!-- מחסן 32 -->
+  <div class="warehouse">
+    <h2>מחסן 32 - כראדי</h2>
+    <table>
+      <tr><th>פעולה</th><th>כמות</th></tr>
+      <tr><td>הצבות</td><td>11</td></tr>
+      <tr><td>החלפות</td><td>11</td></tr>
+      <tr><td>הוצאות</td><td>10</td></tr>
+      <tr><th>סה״כ</th><th>32</th></tr>
+    </table>
+    <div id="chart32" class="chart"></div>
+    <div id="chart32_forecast" class="chart"></div>
+    <div class="summary">כראדי מבצע פעילות מצומצמת יותר. יש פוטנציאל להגדלת היקף הפעילות בעיקר בהצבות חדשות.</div>
+  </div>
+
+  <!-- מחסן 40 -->
+  <div class="warehouse">
+    <h2>מחסן 40 - שי שרון</h2>
+    <table>
+      <tr><th>פעולה</th><th>כמות</th></tr>
+      <tr><td>הצבות</td><td>18</td></tr>
+      <tr><td>החלפות</td><td>0</td></tr>
+      <tr><td>הוצאות</td><td>0</td></tr>
+      <tr><th>סה״כ</th><th>18</th></tr>
+    </table>
+    <div id="chart40" class="chart"></div>
+    <div id="chart40_forecast" class="chart"></div>
+    <div class="summary">שי שרון מתמקד באזור השרון בלבד. מומלץ להוסיף שירותי החלפה והוצאה כדי להגדיל יעילות.</div>
   </div>
 </body>
 </html>
