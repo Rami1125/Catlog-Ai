@@ -694,7 +694,19 @@
         function openCalculatorPopup(product) {
             currentProductForModal = product;
             document.getElementById('calc-product-title').innerText = product.title;
-            document.getElementById('calculation-type').value = 'quantity'; // Reset to default
+            
+            // Check if there is a calculator for the product
+            const hasCalculator = !!calculationFormulas[product.title];
+            const calculationTypeSelect = document.getElementById('calculation-type');
+            
+            if (hasCalculator) {
+                calculationTypeSelect.value = 'quantity'; // Reset to default
+                calculationTypeSelect.disabled = false;
+            } else {
+                calculationTypeSelect.value = ''; // No option selected
+                calculationTypeSelect.disabled = true;
+            }
+
             renderCalculatorInputs();
             document.getElementById('calculation-result').classList.add('hidden');
             document.getElementById('calculator-modal').classList.remove('hidden');
@@ -714,6 +726,7 @@
 
             if (!productFormulas || !productFormulas[calculationType]) {
                 inputContainer.innerHTML = `<p class="text-red-500 text-center">מחשבון לא זמין עבור סוג חישוב זה.</p>`;
+                document.getElementById('calculation-result').classList.add('hidden');
                 return;
             }
 
