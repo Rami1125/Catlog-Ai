@@ -1,149 +1,252 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>דשבורד מחסנים - דוח ותחזית</title>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>דשבורד פרימיום - מחסנים</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5faff;
-      margin: 0;
-      padding: 20px;
-      color: #003366;
+    :root{
+      --bg:#f7fbff; --card:#ffffff; --accent:#0f6fff; --accent-2:#60a5ff; --muted:#6b7280; --glass:rgba(255,255,255,0.8);
+      --pop:#fff59d; --success:#10b981; --danger:#ef4444; --shadow:0 8px 30px rgba(6,30,70,0.08);
     }
-    h1, h2 {
-      text-align: center;
-      color: #004a99;
-    }
-    .warehouse {
-      background: #ffffff;
-      border: 1px solid #d0e6ff;
-      border-radius: 16px;
-      padding: 20px;
-      margin: 30px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-    table th, table td {
-      border: 1px solid #d0e6ff;
-      padding: 10px;
-      text-align: center;
-    }
-    table th {
-      background: #e6f0ff;
-    }
-    .chart {
-      height: 300px;
-    }
-    .summary {
-      background: #fff8cc;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 10px;
-      font-weight: bold;
-      color: #333;
-    }
+    *{box-sizing:border-box}
+    body{font-family:Heebo, system-ui, -apple-system, 'Segoe UI', Roboto; margin:0; background:linear-gradient(180deg,#f5fbff 0%, #eef7ff 100%); color:#043356}
+    .wrap{max-width:1100px;margin:22px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .title{display:flex;align-items:center;gap:12px}
+    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:20px;box-shadow:var(--shadow)}
+    h1{margin:0;font-size:20px}
+    .subtitle{color:var(--muted);font-size:13px}
+
+    .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:18px}
+    @media(min-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+    .card{background:var(--card);border-radius:14px;padding:14px;border:1px solid rgba(6,30,70,0.04);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px}
+    .card-header{display:flex;align-items:center;justify-content:space-between}
+    .wh-title{display:flex;gap:10px;align-items:center}
+
+    .metrics{display:flex;gap:8px;flex-wrap:wrap}
+    .metric{background:linear-gradient(180deg, #fbfeff, #f3f9ff);padding:8px 10px;border-radius:10px;border:1px solid rgba(15,111,255,0.06);min-width:90px;text-align:center}
+    .metric strong{display:block;font-size:16px}
+    .metric span{font-size:12px;color:var(--muted)}
+
+    canvas{width:100%!important;height:220px!important}
+    .controls{display:flex;gap:8px;align-items:center}
+    select,input[type=number]{padding:8px;border-radius:8px;border:1px solid rgba(6,30,70,0.06);background:#fbfeff}
+    button{background:var(--accent);color:white;padding:8px 12px;border-radius:10px;border:none;cursor:pointer}
+    .ghost{background:transparent;color:var(--accent);border:1px solid rgba(15,111,255,0.12)}
+
+    .analysis{background:linear-gradient(180deg,#fffef6,#fdfcfc);padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.03);font-size:14px}
+    .plan{margin-top:12px;font-size:13px;color:#0b1220}
+    .small{font-size:12px;color:var(--muted)}
+
+    /* footer compact */
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
   </style>
-  <script>
-    google.charts.load("current", {packages:["corechart", "line"]});
-    google.charts.setOnLoadCallback(drawAllCharts);
-
-    function drawAllCharts() {
-      drawWarehouse("chart30", "מחסן 30 (שארק)", 102, 132, 113);
-      drawWarehouse("chart32", "מחסן 32 (כראדי)", 11, 11, 10);
-      drawWarehouse("chart40", "מחסן 40 (שי שרון)", 18, 0, 0);
-    }
-
-    function drawWarehouse(containerId, title, placements, swaps, removals) {
-      let data = google.visualization.arrayToDataTable([
-        ['פעולה', 'כמות'],
-        ['הצבות', placements],
-        ['החלפות', swaps],
-        ['הוצאות', removals]
-      ]);
-
-      let options = {
-        title: title + " - חלוקת פעולות",
-        colors: ['#3399ff','#66ccff','#003366'],
-        legend: { position: 'bottom' }
-      };
-
-      new google.visualization.PieChart(document.getElementById(containerId)).draw(data, options);
-
-      // תחזית קדימה עד דצמבר
-      let forecastData = [["חודש", "צפי פעולות"]];
-      let total = placements + swaps + removals;
-      let trend = total > 50 ? 5 : 1; // מחסנים גדולים מקבלים קצב גידול מהיר יותר
-      let value = total;
-      for (let m = new Date().getMonth() + 1; m <= 12; m++) {
-        forecastData.push([`חודש ${m}`, value]);
-        value += trend;
-      }
-
-      let dataForecast = google.visualization.arrayToDataTable(forecastData);
-      let optionsForecast = {
-        title: title + " - תחזית עד דצמבר",
-        colors: ["#0066cc"],
-        curveType: "function",
-        legend: "none",
-        hAxis: { title: "חודשים" },
-        vAxis: { title: "סה״כ פעולות" }
-      };
-      new google.visualization.LineChart(document.getElementById(containerId + "_forecast")).draw(dataForecast, optionsForecast);
-    }
-  </script>
 </head>
 <body>
-  <h1>דשבורד פעילות מחסנים</h1>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <div class="logo">דש</div>
+        <div>
+          <h1>דשבורד פרימיום — ניתוח ותוכנית מחסנים</h1>
+          <div class="subtitle">תצוגה מותאמת לכל מחסן • סימולציה דינמית • המלצות עד דצמבר</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="exportBtn" class="ghost">ייצא CSV</button>
+      </div>
+    </header>
 
-  <!-- מחסן 30 -->
-  <div class="warehouse">
-    <h2>מחסן 30 - שארק</h2>
-    <table>
-      <tr><th>פעולה</th><th>כמות</th></tr>
-      <tr><td>הצבות</td><td>102</td></tr>
-      <tr><td>החלפות</td><td>132</td></tr>
-      <tr><td>הוצאות</td><td>113</td></tr>
-      <tr><th>סה״כ</th><th>347</th></tr>
-    </table>
-    <div id="chart30" class="chart"></div>
-    <div id="chart30_forecast" class="chart"></div>
-    <div class="summary">שארק פעיל מאוד באזור המרכז והשרון. נדרש לאזן בין הצבות להחלפות כדי לשמור על זמינות צי.</div>
+    <main class="grid" id="grid">
+      <!-- cards injected by JS -->
+    </main>
+
+    <section class="card" style="margin-top:18px">
+      <div class="card-header"><strong>השוואה מקצועית דינמית</strong><div class="small">אחוזי תרומה, חריגים וחזית שיפור</div></div>
+      <div id="comparison" style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap"></div>
+      <div class="plan" id="globalPlan"></div>
+    </section>
+
+    <footer>נוצר אוטומטית • עדכון אחרון: <span id="updated">—</span></footer>
   </div>
 
-  <!-- מחסן 32 -->
-  <div class="warehouse">
-    <h2>מחסן 32 - כראדי</h2>
-    <table>
-      <tr><th>פעולה</th><th>כמות</th></tr>
-      <tr><td>הצבות</td><td>11</td></tr>
-      <tr><td>החלפות</td><td>11</td></tr>
-      <tr><td>הוצאות</td><td>10</td></tr>
-      <tr><th>סה״כ</th><th>32</th></tr>
-    </table>
-    <div id="chart32" class="chart"></div>
-    <div id="chart32_forecast" class="chart"></div>
-    <div class="summary">כראדי מבצע פעילות מצומצמת יותר. יש פוטנציאל להגדלת היקף הפעילות בעיקר בהצבות חדשות.</div>
-  </div>
+  <script>
+    // בסיס הנתונים כפי שסיפקת
+    const warehouses = [
+      {id:30,name:'שארק (30)',placements:102,swaps:132,removals:113,area:'נתניה, מודיעין, ת"א, השרון, בני ברק, פתח תקווה'},
+      {id:32,name:'כראדי (32)',placements:11,swaps:11,removals:10,area:'דרום, ראשון, מודיעין, ת"א'},
+      {id:40,name:'שי שרון (40)',placements:18,swaps:0,removals:0,area:'השרון בלבד'}
+    ];
 
-  <!-- מחסן 40 -->
-  <div class="warehouse">
-    <h2>מחסן 40 - שי שרון</h2>
-    <table>
-      <tr><th>פעולה</th><th>כמות</th></tr>
-      <tr><td>הצבות</td><td>18</td></tr>
-      <tr><td>החלפות</td><td>0</td></tr>
-      <tr><td>הוצאות</td><td>0</td></tr>
-      <tr><th>סה״כ</th><th>18</th></tr>
-    </table>
-    <div id="chart40" class="chart"></div>
-    <div id="chart40_forecast" class="chart"></div>
-    <div class="summary">שי שרון מתמקד באזור השרון בלבד. מומלץ להוסיף שירותי החלפה והוצאה כדי להגדיל יעילות.</div>
-  </div>
+    const RENT_DAYS = 10;
+
+    function computeMetrics(w){
+      w.total = w.placements + w.swaps + w.removals;
+      const finished = Math.min(w.placements, w.swaps + w.removals);
+      w.overruns = Math.max(0, w.placements - finished);
+      w.onTime = w.placements - w.overruns;
+      w.contribution = 0; // set later
+      return w;
+    }
+
+    // prepare and render cards
+    function render(){
+      const grid = document.getElementById('grid'); grid.innerHTML='';
+      let totalActions = 0;
+      warehouses.forEach(computeMetrics);
+      warehouses.forEach(w=> totalActions+=w.total);
+      warehouses.forEach(w=> w.contribution = totalActions? (w.total/totalActions*100):0);
+
+      warehouses.forEach(w=>{
+        const card = document.createElement('div'); card.className='card';
+        card.innerHTML = `
+          <div class='card-header'>
+            <div class='wh-title'>
+              <div style='font-weight:800;color:var(--accent)'>${w.name}</div>
+              <div class='small'>${w.area}</div>
+            </div>
+            <div class='metrics'>
+              <div class='metric'><strong>${w.total}</strong><span>סה"כ פעולות</span></div>
+              <div class='metric'><strong>${w.placements}</strong><span>הצבות</span></div>
+              <div class='metric'><strong>${w.overruns}</strong><span>לקוחות חורגים</span></div>
+            </div>
+          </div>
+
+          <div style='display:flex;gap:12px;align-items:flex-start'>
+            <div style='flex:1'>
+              <canvas id='chart_${w.id}'></canvas>
+            </div>
+            <div style='width:260px'>
+              <div style='margin-bottom:8px'><label class='small'>סימולציה — בחר כמות פעולה ועדכן</label></div>
+              <div style='display:flex;gap:6px;margin-bottom:8px'>
+                <select id='type_${w.id}' style='flex:1'>
+                  <option value='placements'>הצבות</option>
+                  <option value='swaps'>החלפות</option>
+                  <option value='removals'>הוצאות</option>
+                </select>
+                <input id='value_${w.id}' type='number' min='0' value='0' style='width:90px' />
+              </div>
+              <div style='display:flex;gap:8px'>
+                <button onclick='applySim(${w.id})'>עדכן סימולציה</button>
+                <button class='ghost' onclick='resetSim(${w.id})'>אפס</button>
+              </div>
+
+              <div class='analysis' id='analysis_${w.id}' style='margin-top:10px'>
+                <div class='small'>ניתוח קצר יופיע כאן לאחר סימולציה.</div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        // render chart
+        renderChart(w);
+      });
+
+      renderComparison();
+      document.getElementById('updated').innerText = new Date().toLocaleString('he-IL');
+    }
+
+    // Chart rendering using Chart.js
+    const chartInstances = {};
+    function renderChart(w){
+      const ctx = document.getElementById('chart_'+w.id).getContext('2d');
+      if(chartInstances[w.id]) chartInstances[w.id].destroy();
+      chartInstances[w.id] = new Chart(ctx,{
+        type:'doughnut',
+        data:{labels:['הצבות','החלפות','הוצאות'],datasets:[{data:[w.placements,w.swaps,w.removals],backgroundColor:['#60a5fa','#93c5fd','#075985'],hoverOffset:8}]},
+        options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12}}},cutout:'55%',responsive:true,maintainAspectRatio:false}
+      });
+    }
+
+    // simulation apply
+    function applySim(id){
+      const w = warehouses.find(x=>x.id===id);
+      const type = document.getElementById('type_'+id).value;
+      const val = parseInt(document.getElementById('value_'+id).value) || 0;
+
+      // clone original for calculation without mutating base data
+      const sim = {...w};
+      sim[type] = sim[type] + val;
+      computeMetrics(sim);
+
+      // re-render chart with simulation overlay
+      renderChartSim(sim);
+
+      // analysis text
+      const analysisEl = document.getElementById('analysis_'+id);
+      let text = '';
+      text += `<div>אחרי הוספת <strong>${val}</strong> ל'<strong>${type}</strong>:</div>`;
+      text += `<div class='small' style='margin-top:6px'>סה"כ פעולות צפוי: <strong>${sim.total}</strong> — לקוחות חורגים צפויים: <strong>${sim.overruns}</strong></div>`;
+
+      // suggestion: if removals increased for warehouse 30, suggest redistribution
+      if(id===30 && type==='removals' && val>0){
+        text += `<div style='margin-top:8px;color:var(--danger)'><strong>הערה:</strong> נרשמה עלייה בהוצאות במחסן 30 — שקול להעביר חלק מההצבות למחסן 32 כדי לאזן עומס.</div>`;
+      } else if(sim.overruns>0){
+        text += `<div style='margin-top:8px;color:#b45309'>המלצה: יש ${sim.overruns} לקוחות שעשויים לחוריג — שלח תזכורת ביום ה-7 או העבר חלק מההצבות למחסן יעיל יותר.</div>`;
+      } else {
+        text += `<div style='margin-top:8px;color:var(--success)'>כל המכולות צפויות להסתיים בתוך טווח ה-10 ימים.</div>`;
+      }
+
+      analysisEl.innerHTML = text;
+
+      // update global comparison and charts with simulated values highlighted
+      renderComparison(sim, id);
+    }
+
+    function resetSim(id){
+      render();
+    }
+
+    function renderChartSim(sim){
+      const ctx = document.getElementById('chart_'+sim.id).getContext('2d');
+      if(chartInstances[sim.id]) chartInstances[sim.id].destroy();
+      chartInstances[sim.id] = new Chart(ctx,{
+        type:'doughnut',
+        data:{labels:['הצבות','החלפות','הוצאות'],datasets:[
+          {data:[sim.placements,sim.swaps,sim.removals],backgroundColor:['#60a5fa','#93c5fd','#075985'],hoverOffset:8}
+        ]},
+        options:{plugins:{legend:{position:'bottom'}},cutout:'55%',responsive:true,maintainAspectRatio:false}
+      });
+    }
+
+    // comparison area
+    function renderComparison(sim=null, simId=null){
+      const el = document.getElementById('comparison'); el.innerHTML='';
+      warehouses.forEach(w=>{
+        const comp = document.createElement('div'); comp.style.flex='1'; comp.style.minWidth='220px'; comp.style.background='#fff'; comp.style.padding='12px'; comp.style.borderRadius='10px'; comp.style.border='1px solid rgba(6,30,70,0.04)';
+        const data = sim && simId===w.id ? sim : w;
+        const pct = data.contribution? data.contribution.toFixed(1)+'%':'0%';
+        comp.innerHTML = `<div style='font-weight:700;color:var(--accent)'>${w.name}</div>
+                          <div class='small'>סה"כ: <strong>${data.total}</strong></div>
+                          <div class='small'>חריגים: <strong>${data.overruns}</strong></div>
+                          <div class='small'>תרומה: <strong>${pct}</strong></div>`;
+        el.appendChild(comp);
+      });
+
+      // global plan suggestion
+      const gp = document.getElementById('globalPlan');
+      let high = warehouses.slice().sort((a,b)=>b.total-a.total)[0];
+      gp.innerHTML = `<strong>תוכנית מומלצת (עד דצמבר):</strong> להקצות כ-60% מההצבות למחסן ${high.name}, ~30% ל${warehouses[1].name} ולשמור ~10% ל${warehouses[2].name} עד ששי שרון יגביר החלפות/הוצאות. (עדכון על בסיס נתונים סטטיים)`;
+    }
+
+    // CSV export
+    document.getElementById('exportBtn').addEventListener('click', ()=>{
+      const rows = [['מחסן','הצבות','החלפות','הוצאות','סה"כ','חריגים']];
+      warehouses.forEach(w=> rows.push([w.name,w.placements,w.swaps,w.removals,w.total,w.overruns]));
+      const csv = rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('
+');
+      const blob = new Blob([csv],{type:'text/csv'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download='warehouses_report.csv'; a.click();
+    });
+
+    // init
+    render();
+  </script>
 </body>
 </html>
