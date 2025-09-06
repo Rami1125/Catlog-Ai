@@ -2,7 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>מערכת ניהול מכולות</title>
+  <title>דשבורד מכולות - תובנות ותוכנית קדימה</title>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -14,12 +15,11 @@
     h1 {
       text-align: center;
       color: #004a99;
-      margin-bottom: 20px;
     }
     .stats {
       display: flex;
       justify-content: space-around;
-      margin-bottom: 20px;
+      margin: 20px 0;
     }
     .stat-box {
       background: #ffffff;
@@ -31,80 +31,115 @@
       margin: 0 10px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    .stat-box h2 {
-      margin: 0;
-      font-size: 18px;
-      color: #0066cc;
+    #charts {
+      margin-top: 40px;
     }
-    .stat-box p {
-      font-size: 24px;
-      margin: 10px 0 0;
-      font-weight: bold;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .chart-box {
       background: #fff;
+      padding: 20px;
       border-radius: 12px;
-      overflow: hidden;
+      margin-bottom: 30px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      border: 1px solid #d0e6ff;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background: #e6f0ff;
-      color: #003366;
-    }
-    tr:nth-child(even) {
-      background: #f9fcff;
     }
   </style>
   <script>
+    google.charts.load("current", {packages:["corechart", "line"]});
+
     function loadData() {
-      google.script.run.withSuccessHandler(displayData).getDataFromSheet();
+      google.script.run.withSuccessHandler(processData).getDataFromSheet();
     }
 
-    function displayData(data) {
+    function processData(data) {
       if (!data || data.length === 0) return;
 
-      let table = "<table><tr>";
-      data[0].forEach(header => {
-        table += `<th>${header}</th>`;
-      });
-      table += "</tr>";
-
       let totalDays = 0, count = 0, onTime = 0, late = 0;
-
+      let monthlyData = {}; // {חודש: [ימי שכירות ממוצעים]}
+      
       for (let i = 1; i < data.length; i++) {
-        table += "<tr>";
-        data[i].forEach(cell => {
-          table += `<td>${cell}</td>`;
-        });
-        table += "</tr>";
-
-        let days = parseInt(data[i][3]); // נניח שעמודת "ימי שכירות" היא בעמודה 4
+        let row = data[i];
+        let date = new Date(row[1]); // נניח עמודה 2 = תאריך
+        let days = parseInt(row[3]); // נניח עמודה 4 = ימי שכירות
         if (!isNaN(days)) {
           totalDays += days;
           count++;
           if (days <= 10) onTime++; else late++;
+
+          let month = date.getMonth() + 1;
+          if (!monthlyData[month]) monthlyData[month] = [];
+          monthlyData[month].push(days);
         }
       }
 
-      table += "</table>";
-      document.getElementById("table").innerHTML = table;
+      let avgDays = (count ? (totalDays / count).toFixed(1) : 0);
+      let avgLate = (count ? (late / count * 100).toFixed(1) : 0);
 
-      document.getElementById("avgDays").innerText = (count ? (totalDays / count).toFixed(1) : 0);
+      document.getElementById("avgDays").innerText = avgDays;
       document.getElementById("onTime").innerText = onTime;
       document.getElementById("late").innerText = late;
-      document.getElementById("avgLate").innerText = (count ? (late / count * 100).toFixed(1) + "%" : "0%");
+      document.getElementById("avgLate").innerText = avgLate + "%";
+
+      drawCharts(monthlyData, avgDays);
+    }
+
+    function drawCharts(monthlyData, avgDays) {
+      // תרשים 1: עמודות ממוצע ימי שכירות לפי חודש
+      let chartData = [["חודש", "ממוצע ימי שכירות"]];
+      for (let m = 1; m <= 12; m++) {
+        if (monthlyData[m]) {
+          let sum = monthlyData[m].reduce((a,b)=>a+b,0);
+          let avg = sum / monthlyData[m].length;
+          chartData.push([`חודש ${m}`, avg]);
+        } else {
+          chartData.push([`חודש ${m}`, null]);
+        }
+      }
+
+      let data1 = google.visualization.arrayToDataTable(chartData);
+      let options1 = {
+        title: "ממוצע ימי שכירות חודשי",
+        colors: ["#3399ff"],
+        hAxis: { title: "חודשים" },
+        vAxis: { title: "ימים" },
+        legend: "none"
+      };
+      new google.visualization.ColumnChart(document.getElementById("chart1")).draw(data1, options1);
+
+      // תרשים 2: תחזית עד דצמבר (קו מגמה עם חץ)
+      let forecastData = [["חודש", "צפי ימי שכירות"]];
+      let trend = avgDays > 10 ? -0.5 : 0.5; // אם חורגים יורד, אם עומדים בזמן עולה
+      let val = parseFloat(avgDays);
+      for (let m = new Date().getMonth() + 1; m <= 12; m++) {
+        forecastData.push([`חודש ${m}`, val]);
+        val += trend;
+      }
+
+      let data2 = google.visualization.arrayToDataTable(forecastData);
+      let options2 = {
+        title: "תחזית שיפור עד דצמבר",
+        colors: ["#0066cc"],
+        curveType: "function",
+        legend: "none",
+        hAxis: { title: "חודשים" },
+        vAxis: { title: "ימי שכירות צפויים" }
+      };
+      new google.visualization.LineChart(document.getElementById("chart2")).draw(data2, options2);
+
+      // תרשים 3: אחוז חורגים מול בזמן
+      let data3 = google.visualization.arrayToDataTable([
+        ["קטגוריה", "כמות"],
+        ["בזמן", parseInt(document.getElementById("onTime").innerText)],
+        ["חורגים", parseInt(document.getElementById("late").innerText)]
+      ]);
+      let options3 = {
+        title: "התפלגות לקוחות",
+        colors: ["#33ccff", "#ff6666"]
+      };
+      new google.visualization.PieChart(document.getElementById("chart3")).draw(data3, options3);
     }
   </script>
 </head>
 <body onload="loadData()">
-  <h1>מערכת ניהול מכולות</h1>
+  <h1>דשבורד ניהול מכולות</h1>
 
   <div class="stats">
     <div class="stat-box">
@@ -125,6 +160,10 @@
     </div>
   </div>
 
-  <div id="table"></div>
+  <div id="charts">
+    <div class="chart-box"><div id="chart1" style="height: 400px;"></div></div>
+    <div class="chart-box"><div id="chart2" style="height: 400px;"></div></div>
+    <div class="chart-box"><div id="chart3" style="height: 400px;"></div></div>
+  </div>
 </body>
 </html>
